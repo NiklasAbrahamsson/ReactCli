@@ -50,7 +50,7 @@ class ReactCli:
 
                     f.close()
             except IOError:
-                print('Saving failed!')
+                print('Saving failed {}!'.format(file_path))
             if styleSheet:
                 try:
                     with open('{}/{}.styles.js'.format(file_path, file_path), mode='w') as f:
@@ -61,7 +61,7 @@ class ReactCli:
                         f.write('export default useStyles;')    
                         f.close()
                 except IOError:
-                    print('Saving failed!')
+                     print('Saving failed {}!'.format(file_path))
 
 
     def get_user_choice(self):
