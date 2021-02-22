@@ -2,6 +2,12 @@ import os
 from pathlib import Path
 class ReactCli:
 
+    def __init__(self):
+        """The constructor of the ReactCli class."""
+        # Initializing our (empty) blockchain list
+        self.type = ''
+
+
     def capitalize_each_word(self, original_str):
         result = ''
         # Split the string and get all words in a list
@@ -26,7 +32,7 @@ class ReactCli:
         else:
             Path(file_name).mkdir(parents=True, exist_ok=True)
             try:
-                with open('{}/{}.js'.format(file_name, file_name), mode='w') as f:
+                with open('{}/{}.{}'.format(file_name, file_name, self.type), mode='w') as f:
                     f.write('import React from "react";')
                     f.write('\n')
                     if styleSheet:
@@ -53,7 +59,7 @@ class ReactCli:
                 print('Saving failed {} component file!'.format(file_name))
             if styleSheet:
                 try:
-                    with open('{}/{}.styles.js'.format(file_name, file_name), mode='w') as f:
+                    with open('{}/{}.styles.{}'.format(file_name, file_name, self.type), mode='w') as f:
                         f.write('import { makeStyles } from "@material-ui/core";')
                         f.write('\n')
                         f.write('const useStyles = makeStyles((theme) => ({}));')
@@ -70,7 +76,7 @@ class ReactCli:
         else:
             Path(file_name).mkdir(parents=True, exist_ok=True)
             try:
-                with open('{}/{}.js'.format(file_name, file_name), mode='w') as f:
+                with open('{}/{}.{}'.format(file_name, file_name, self.type), mode='w') as f:
                     f.write('import React from "react";')
                     f.write('\n')
                     if styleSheet:
@@ -97,7 +103,7 @@ class ReactCli:
                 print('Saving failed {} component file!'.format(file_name))
 
             try:
-                with open('{}/{}Container.js'.format(file_name, file_name), mode='w') as f:
+                with open('{}/{}Container.{}'.format(file_name, file_name, self.type), mode='w') as f:
                     f.write('import React from "react";')
                     f.write('\n')
                     if styleSheet:
@@ -125,7 +131,7 @@ class ReactCli:
                 print('Saving failed {} container file!'.format(file_name))
             if styleSheet:
                 try:
-                    with open('{}/{}.styles.js'.format(file_name, file_name), mode='w') as f:
+                    with open('{}/{}.styles.{}'.format(file_name, file_name, self.type), mode='w') as f:
                         f.write('import { makeStyles } from "@material-ui/core";')
                         f.write('\n')
                         f.write('const useStyles = makeStyles((theme) => ({}));')
@@ -139,6 +145,11 @@ class ReactCli:
     def get_user_choice(self):
         """Prompts the user for its choice and return it."""
         user_input = input('Your choice: ')
+        return user_input
+
+    def js_or_ts(self):
+        """Prompts the user for its choice and return it."""
+        user_input = input('Do you want JS or TS: ')
         return user_input
 
     def listen_for_input(self):
@@ -173,6 +184,27 @@ class ReactCli:
 
         print('Done!')
 
+    def listen_for_type(self):
+        waiting_for_decision = True
+
+         
+        while waiting_for_decision:
+            print('please choose JS or TS')
+            print('1: JS')
+            print('2: TS')
+            user_choice = self.get_user_choice()
+            if user_choice == '1':
+                self.type = 'js'
+                self.listen_for_input()
+            if user_choice == '2':
+                self.type = 'ts'
+                self.listen_for_input()
+            else:
+                print('Input was invalid, please pick a value from the list!')
+
+
+
 if __name__ == '__main__':
     ReactCli = ReactCli()
-    ReactCli.listen_for_input()
+    # ReactCli.listen_for_input()
+    ReactCli.listen_for_type()
