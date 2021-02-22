@@ -159,7 +159,7 @@ class ReactCli:
         # A while loop for the user input interface
         # It's a loop that exits once waiting_for_input becomes False or when break is called
         while waiting_for_input:
-            print('Please choose')
+            print('Please choose one option')
             print('1: Component with stylesheet')
             print('2: Component without stylesheet')
             print('3: Component with container and stylesheet')
@@ -189,9 +189,9 @@ class ReactCli:
 
          
         while waiting_for_decision:
-            print('please choose JS or TS')
-            print('1: JS')
-            print('2: TS')
+            print('please choose Javascript or Typescript')
+            print('1: Javascript')
+            print('2: Typescript')
             user_choice = self.get_user_choice()
             if user_choice == '1':
                 self.type = 'js'
