@@ -20,7 +20,7 @@ class ReactCli:
             return result.replace(" ", "")
 
 
-    def ensure_dir(self, file_name, styleSheet = False):
+    def create_component(self, file_name, styleSheet = False):
         if os.path.exists(file_name):
             print('Folder already exists')
         else:
@@ -50,7 +50,7 @@ class ReactCli:
 
                     f.close()
             except IOError:
-                print('Saving failed {}!'.format(file_name))
+                print('Saving failed {} component file!'.format(file_name))
             if styleSheet:
                 try:
                     with open('{}/{}.styles.js'.format(file_name, file_name), mode='w') as f:
@@ -61,7 +61,79 @@ class ReactCli:
                         f.write('export default useStyles;')    
                         f.close()
                 except IOError:
-                     print('Saving failed {}!'.format(file_name))
+                     print('Saving failed {} stylesheet!'.format(file_name))
+
+    
+    def create_component_with_container(self, file_name, styleSheet = False):
+        if os.path.exists(file_name):
+            print('Folder already exists')
+        else:
+            Path(file_name).mkdir(parents=True, exist_ok=True)
+            try:
+                with open('{}/{}.js'.format(file_name, file_name), mode='w') as f:
+                    f.write('import React from "react";')
+                    f.write('\n')
+                    if styleSheet:
+                        f.write('import useStyles from "./{}.styles";'.format(file_name))
+                    f.write('\n')
+                    f.write('\n')
+                    f.write('const %s = () => {' % (file_name))
+                    f.write('\n')
+                    f.write('const classes = useStyles();')
+                    f.write('\n')
+                    f.write('return (')
+                    f.write('\n')
+                    f.write('<div></div>')
+                    f.write('\n')
+                    f.write(')')
+                    f.write('\n')
+                    f.write('}')
+                    f.write('\n')
+                    f.write('\n')
+                    f.write('export default {};'.format(file_name))
+
+                    f.close()
+            except IOError:
+                print('Saving failed {} component file!'.format(file_name))
+
+            try:
+                with open('{}/{}Container.js'.format(file_name, file_name), mode='w') as f:
+                    f.write('import React from "react";')
+                    f.write('\n')
+                    if styleSheet:
+                        f.write('import useStyles from "./{}.styles";'.format(file_name))
+                    f.write('\n')
+                    f.write('import {} from "./{}";'.format(file_name, file_name))
+                    f.write('\n')
+                    f.write('const %sContainer = () => {' % (file_name))
+                    f.write('\n')
+                    f.write('const classes = useStyles();')
+                    f.write('\n')
+                    f.write('return (')
+                    f.write('\n')
+                    f.write('<{}></{}>'.format(file_name, file_name))
+                    f.write('\n')
+                    f.write(')')
+                    f.write('\n')
+                    f.write('}')
+                    f.write('\n')
+                    f.write('\n')
+                    f.write('export default {}Container;'.format(file_name))
+
+                    f.close()
+            except IOError:
+                print('Saving failed {} container file!'.format(file_name))
+            if styleSheet:
+                try:
+                    with open('{}/{}.styles.js'.format(file_name, file_name), mode='w') as f:
+                        f.write('import { makeStyles } from "@material-ui/core";')
+                        f.write('\n')
+                        f.write('const useStyles = makeStyles((theme) => ({}));')
+                        f.write('\n')
+                        f.write('export default useStyles;')    
+                        f.close()
+                except IOError:
+                     print('Saving failed {} stylesheet!'.format(file_name))
 
 
     def get_user_choice(self):
@@ -79,16 +151,18 @@ class ReactCli:
             print('Please choose')
             print('1: Component with stylesheet')
             print('2: Component without stylesheet')
+            print('3: Component with container and stylesheet')
             print('q: Quit')
             user_choice = self.get_user_choice()
             if user_choice == '1':
-                folder_name = input('Please choose name: ')
-                folder_name = self.capitalize_each_word(folder_name)
-                self.ensure_dir(folder_name, True)
+                folder_name = input('Please choose component name: ')
+                self.create_component(self.capitalize_each_word(folder_name), True)
             if user_choice == '2':
-                folder_name = input('Please choose name: ')
-                folder_name = self.capitalize_each_word(folder_name)
-                self.ensure_dir(folder_name)
+                folder_name = input('Please choose component name: ')
+                self.create_component(self.capitalize_each_word(folder_name))
+            if user_choice == '3':
+                folder_name = input('Please choose component name: ')
+                self.create_component_with_container(self.capitalize_each_word(folder_name), True)
             elif user_choice == 'q':
                 # This will lead to the loop to exist because it's running condition becomes False
                 waiting_for_input = False
