@@ -21,27 +21,32 @@ class ReactCli:
                 result = elem.capitalize()
         # If result is still empty then return original string else returned capitalized.
         if not result:
-            return original_str.replace(" ", "")
+            return original_str
         else:
-            return result.replace(" ", "")
+            return result
 
 
-    def create_component(self, file_name, styleSheet = False):
-        if os.path.exists(file_name):
+    def create_component(self, file_name, style_sheet = False):
+        ts_folder = file_name.replace(" ", "-")
+        file_name = self.capitalize_each_word(file_name).replace(" ", "")
+        folder = file_name if self.type == 'js' else ts_folder
+
+        if os.path.exists(folder):
             print('Folder already exists')
         else:
-            Path(file_name).mkdir(parents=True, exist_ok=True)
+            Path(folder).mkdir(parents=True, exist_ok=True)
             try:
-                with open('{}/{}.{}'.format(file_name, file_name, self.type), mode='w') as f:
+                with open('{}/{}.{}'.format(folder, file_name, self.type), mode='w') as f:
                     f.write('import React from "react";')
                     f.write('\n')
-                    if styleSheet:
+                    if style_sheet:
                         f.write('import useStyles from "./{}.styles";'.format(file_name))
                     f.write('\n')
                     f.write('\n')
                     f.write('const %s = () => {' % (file_name))
-                    f.write('\n')
-                    f.write('const classes = useStyles();')
+                    if style_sheet:
+                        f.write('\n')
+                        f.write('const classes = useStyles();')
                     f.write('\n')
                     f.write('return (')
                     f.write('\n')
@@ -57,9 +62,9 @@ class ReactCli:
                     f.close()
             except IOError:
                 print('Saving failed {} component file!'.format(file_name))
-            if styleSheet:
+            if style_sheet:
                 try:
-                    with open('{}/{}.styles.{}'.format(file_name, file_name, self.type), mode='w') as f:
+                    with open('{}/{}.styles.{}'.format(folder, file_name, self.type), mode='w') as f:
                         f.write('import { makeStyles } from "@material-ui/core";')
                         f.write('\n')
                         f.write('const useStyles = makeStyles((theme) => ({}));')
@@ -67,19 +72,23 @@ class ReactCli:
                         f.write('export default useStyles;')    
                         f.close()
                 except IOError:
-                     print('Saving failed {} stylesheet!'.format(file_name))
+                     print('Saving failed {} style_sheet!'.format(file_name))
 
     
-    def create_component_with_container(self, file_name, styleSheet = False):
-        if os.path.exists(file_name):
+    def create_component_with_container(self, file_name, style_sheet = False):
+        ts_folder = file_name.replace(" ", "-")
+        file_name = self.capitalize_each_word(file_name).replace(" ", "")
+        folder = file_name if self.type == 'js' else ts_folder
+        fileType = self.type if self.type == 'js' else 'tsx'
+        if os.path.exists(folder):
             print('Folder already exists')
         else:
-            Path(file_name).mkdir(parents=True, exist_ok=True)
+            Path(folder).mkdir(parents=True, exist_ok=True)
             try:
-                with open('{}/{}.{}'.format(file_name, file_name, self.type), mode='w') as f:
+                with open('{}/{}.{}'.format(folder, file_name, fileType), mode='w') as f:
                     f.write('import React from "react";')
                     f.write('\n')
-                    if styleSheet:
+                    if style_sheet:
                         f.write('import useStyles from "./{}.styles";'.format(file_name))
                     f.write('\n')
                     f.write('\n')
@@ -103,10 +112,10 @@ class ReactCli:
                 print('Saving failed {} component file!'.format(file_name))
 
             try:
-                with open('{}/{}Container.{}'.format(file_name, file_name, self.type), mode='w') as f:
+                with open('{}/{}Container.{}'.format(folder, file_name, fileType), mode='w') as f:
                     f.write('import React from "react";')
                     f.write('\n')
-                    if styleSheet:
+                    if style_sheet:
                         f.write('import useStyles from "./{}.styles";'.format(file_name))
                     f.write('\n')
                     f.write('import {} from "./{}";'.format(file_name, file_name))
@@ -129,17 +138,17 @@ class ReactCli:
                     f.close()
             except IOError:
                 print('Saving failed {} container file!'.format(file_name))
-            if styleSheet:
+            if style_sheet:
                 try:
-                    with open('{}/{}.styles.{}'.format(file_name, file_name, self.type), mode='w') as f:
+                    with open('{}/{}.styles.{}'.format(folder, file_name, self.type), mode='w') as f:
                         f.write('import { makeStyles } from "@material-ui/core";')
                         f.write('\n')
-                        f.write('const useStyles = makeStyles((theme) => ({}));')
+                        f.write('const useStyles = makeStyles(() => ({}));')
                         f.write('\n')
                         f.write('export default useStyles;')    
                         f.close()
                 except IOError:
-                     print('Saving failed {} stylesheet!'.format(file_name))
+                     print('Saving failed {} style_sheet!'.format(file_name))
 
 
     def get_user_choice(self):
@@ -160,20 +169,20 @@ class ReactCli:
         # It's a loop that exits once waiting_for_input becomes False or when break is called
         while waiting_for_input:
             print('Please choose one option')
-            print('1: Component with stylesheet')
-            print('2: Component without stylesheet')
-            print('3: Component with container and stylesheet')
+            print('1: Component with style_sheet')
+            print('2: Component without style_sheet')
+            print('3: Component with container and style_sheet')
             print('q: Quit')
             user_choice = self.get_user_choice()
             if user_choice == '1':
                 folder_name = input('Please choose component name: ')
-                self.create_component(self.capitalize_each_word(folder_name), True)
+                self.create_component(folder_name, True)
             if user_choice == '2':
                 folder_name = input('Please choose component name: ')
-                self.create_component(self.capitalize_each_word(folder_name))
+                self.create_component(folder_name)
             if user_choice == '3':
                 folder_name = input('Please choose component name: ')
-                self.create_component_with_container(self.capitalize_each_word(folder_name), True)
+                self.create_component_with_container(folder_name, True)
             elif user_choice == 'q':
                 # This will lead to the loop to exist because it's running condition becomes False
                 waiting_for_input = False
@@ -192,6 +201,7 @@ class ReactCli:
             print('please choose Javascript or Typescript')
             print('1: Javascript')
             print('2: Typescript')
+            print('q: Quit')
             user_choice = self.get_user_choice()
             if user_choice == '1':
                 self.type = 'js'
@@ -199,6 +209,8 @@ class ReactCli:
             if user_choice == '2':
                 self.type = 'ts'
                 self.listen_for_input()
+            if user_choice == 'q':
+                waiting_for_decision = False
             else:
                 print('Input was invalid, please pick a value from the list!')
 
