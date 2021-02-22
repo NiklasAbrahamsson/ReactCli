@@ -39,7 +39,7 @@ class ReactCli:
                     f.write('\n')
                     f.write('return (')
                     f.write('\n')
-                    f.write('<div></div>;')
+                    f.write('<div></div>')
                     f.write('\n')
                     f.write(')')
                     f.write('\n')
