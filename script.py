@@ -20,40 +20,40 @@ class ReactCli:
             return result.replace(" ", "")
 
 
-    def ensure_dir(self, file_path, styleSheet = False):
-        if os.path.exists(file_path):
+    def ensure_dir(self, file_name, styleSheet = False):
+        if os.path.exists(file_name):
             print('Folder already exists')
         else:
-            Path(file_path).mkdir(parents=True, exist_ok=True)
+            Path(file_name).mkdir(parents=True, exist_ok=True)
             try:
-                with open('{}/{}.js'.format(file_path, file_path), mode='w') as f:
+                with open('{}/{}.js'.format(file_name, file_name), mode='w') as f:
                     f.write('import React from "react";')
                     f.write('\n')
                     if styleSheet:
-                        f.write('import useStyles from "./{}.styles";'.format(file_path))
+                        f.write('import useStyles from "./{}.styles";'.format(file_name))
                     f.write('\n')
                     f.write('\n')
-                    f.write('const test = () => {')
+                    f.write('const %s = () => {' % (file_name))
                     f.write('\n')
                     f.write('const classes = useStyles();')
                     f.write('\n')
                     f.write('return (')
                     f.write('\n')
-                    f.write('<div></div>')
+                    f.write('<div></div>;')
                     f.write('\n')
                     f.write(')')
                     f.write('\n')
                     f.write('}')
                     f.write('\n')
                     f.write('\n')
-                    f.write('export default test')
+                    f.write('export default {};'.format(file_name))
 
                     f.close()
             except IOError:
-                print('Saving failed {}!'.format(file_path))
+                print('Saving failed {}!'.format(file_name))
             if styleSheet:
                 try:
-                    with open('{}/{}.styles.js'.format(file_path, file_path), mode='w') as f:
+                    with open('{}/{}.styles.js'.format(file_name, file_name), mode='w') as f:
                         f.write('import { makeStyles } from "@material-ui/core";')
                         f.write('\n')
                         f.write('const useStyles = makeStyles((theme) => ({}));')
@@ -61,7 +61,7 @@ class ReactCli:
                         f.write('export default useStyles;')    
                         f.close()
                 except IOError:
-                     print('Saving failed {}!'.format(file_path))
+                     print('Saving failed {}!'.format(file_name))
 
 
     def get_user_choice(self):
